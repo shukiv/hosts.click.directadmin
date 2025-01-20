@@ -1,0 +1,9 @@
+#!/usr/local/bin/php -n
+<?php
+  echo "HTTP/1.1 200 OK\n";
+  echo "Cache-Control: no-cache, must-revalidate\n";
+  echo "Content-type: text/plain\n\n";
+
+  phpinfo(INFO_ENVIRONMENT);
+?>
+

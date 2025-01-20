@@ -1,0 +1,23 @@
+#!/usr/local/bin/php -n
+<?php  
+  echo "HTTP/1.1 200 OK\n";
+  echo "Cache-Control: no-cache, must-revalidate\n";
+  echo "Content-type: application/json\n\n";
+  $menu[] = array(
+		  "name"=>"Plugged User Menu",
+		  "icon"=>"https://image.flaticon.com/icons/png/512/2146/2146350.png",
+		  "entries"=>array(array(
+							"href"=>"https://flaticon.com",
+							"name"=>"FlatIcon.com",
+							"icon"=>"https://image.flaticon.com/icons/png/512/2146/2146350.png",
+							"newTab"=> true,
+							"updates"=> 1
+							))
+					);
+				
+	
+	$data = json_encode($menu, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+	echo $data; 
+	
+?>
+
