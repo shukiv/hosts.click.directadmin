@@ -1,0 +1,12 @@
+#!/usr/local/bin/php
+<?php
+$lang = getenv("LANGUAGE");
+$s = '';
+switch($lang)
+{
+	case 'fr'	: $s="Bonjour Monde!"; break;
+	case 'en'	: 
+	default		: $s="Hello World!"; break;
+}
+echo $s;
+?>

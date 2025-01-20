@@ -1,0 +1,53 @@
+#!/usr/local/bin/php
+
+<?php
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    require_once getenv('DOCUMENT_ROOT') . "/../exec/httpsocket.inc.php";
+
+    $da = new HTTPSocket();
+    $host = "https://{$_SERVER['SERVER_NAME']}";
+    $port = $_SERVER["SERVER_PORT"];
+    $da->connect($host, $port);
+
+    // Get valid domains from DA API
+    $da->query("/CMD_API_ADDITIONAL_DOMAINS");
+
+    // On error from request
+    if (!empty($da->error) || $da->get_status_code() != 200) {
+        echo $da->get_status_code()."<br>";
+        echo "No domains<br>";
+
+        foreach ($da->error as $error) {
+            echo $error."<br>";
+        }
+
+        exit;
+    }
+
+    $domains = $da->fetch_parsed_body();
+
+    echo "<p>This plugins allows creating a website-preview URL without having to change DNS records.</p>";
+    echo "<table style=\"width: 100%;\">";
+    echo "<tr><th>Domain</th><th>IP</th><th>Preview link</th></tr>";
+    foreach ($domains as $domain => $ips) {
+        // Since DA API returns server_domain_host_name type structure
+        $domain = str_replace("_", ".", $domain);
+
+        parse_str($ips, $parsed_ips);
+        $ip = $parsed_ips["ip"];
+
+        // Url with parameters
+        $url = $new_url = "https://hosts.click/cpanel.html?ip="
+                            .urlencode($ip)
+                            ."&domains="
+                            .urlencode($domain);;
+
+	echo "<tr>";
+        echo "<td>{$domain}</td>";
+        echo "<td>{$ip}</td>";
+        echo "<td><a href=\"{$url}\" target=\"_blank\"><button>Generate</button></a></td>";
+	echo "</tr>";
+    }
+    echo "</table>";
+?>
