@@ -1,0 +1,22 @@
+{
+  "categories": {
+    "hosts_click_category": {
+      "name": "Hosts.click",
+      "icon": "/CMD_PLUGINS/hosts-click/assets/hosts-click.svg",
+      "position": 999,
+      "enabled": true
+    }
+  },
+  "entries": {
+    "hosts_click_entry": {
+      "name": "Preview Links",
+      "icon": "/CMD_PLUGINS/hosts-click/assets/hosts-click.svg",
+      "href": "/CMD_PLUGINS_RESELLER/hosts-click/user/index.php",
+      "category": "hosts_click_category",
+      "position": 0,
+      "enabled": true,
+      "newTab": false
+    }
+  },
+  "pluginsMountCategory": "hosts_click_category"
+}

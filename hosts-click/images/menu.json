@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Hosts.click",
+    "icon": "/CMD_PLUGINS/hosts-click/assets/hosts-click.svg",
+    "entries": [
+      {
+        "name": "Preview Links",
+        "icon": "/CMD_PLUGINS/hosts-click/assets/hosts-click.svg",
+        "href": "/CMD_PLUGINS/hosts-click/user/index.php",
+        "newTab": false
+      }
+    ]
+  }
+]
