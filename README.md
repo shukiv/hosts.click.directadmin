@@ -11,6 +11,43 @@ It also injects a “Temporary URL” action in the Domains UI (reversible, with
 - Root shell access
 - Hosts.click API base URL: `https://hostsclick.com` (HTTPS only)
 
+## Quick Install (Recommended)
+
+Run as `root`:
+
+```bash
+curl -fsSL https://hostsclick.com/downloads/hosts-click-directadmin-installer.sh | bash
+```
+
+## Quick Uninstall (Recommended)
+
+Run as `root`:
+
+```bash
+curl -fsSL https://hostsclick.com/downloads/hosts-click-directadmin-installer.sh | bash -s -- --uninstall
+```
+
+## Download Installer
+
+Install:
+
+```bash
+curl -fsSL https://hostsclick.com/downloads/hosts-click-directadmin-installer.sh -o hosts-click-directadmin-installer.sh
+bash hosts-click-directadmin-installer.sh
+```
+
+Uninstall:
+
+```bash
+bash hosts-click-directadmin-installer.sh --uninstall
+```
+
+## Download Plugin (tar.gz)
+
+```bash
+curl -fsSL https://hostsclick.com/downloads/hosts-click-directadmin-plugin.tar.gz -o hosts-click-directadmin-plugin.tar.gz
+```
+
 ## Features
 
 - “Preview Links” UI:
@@ -50,6 +87,20 @@ That script powers the Domains page “Temporary URL” injection.
 ```bash
 cd /path/to/hosts.click.directadmin
 sudo bash uninstall.sh
+```
+
+## Uninstall (From Downloaded tar.gz)
+
+If the archive contains `directadmin-plugin/`:
+
+```bash
+tmp=$(mktemp -d) && curl -fsSL https://hostsclick.com/downloads/hosts-click-directadmin-plugin.tar.gz -o "$tmp/plugin.tar.gz" && tar -xzf "$tmp/plugin.tar.gz" -C "$tmp" && bash "$tmp/directadmin-plugin/uninstall.sh"
+```
+
+If the archive extracts files into the temp directory root (common):
+
+```bash
+tmp=$(mktemp -d) && curl -fsSL https://hostsclick.com/downloads/hosts-click-directadmin-plugin.tar.gz -o "$tmp/plugin.tar.gz" && tar -xzf "$tmp/plugin.tar.gz" -C "$tmp" && bash "$tmp/uninstall.sh"
 ```
 
 ## Configuration
