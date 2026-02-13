@@ -1,48 +1,68 @@
 # Hosts.click DirectAdmin Plugin (Evolution)
 
-This plugin adds Hosts.click preview link generation inside DirectAdmin **user** accounts (Evolution skin only).
+Hosts.click adds **temporary HTTPS preview links** for your hosted domains. This plugin integrates Hosts.click into
+DirectAdmin **user** accounts running the **Evolution** skin.
 
-## Features
-
-- **Preview links tab**: create preview links with domain + IP, plus list all preview links.
-- **Settings tab**: save, test, and remove API key.
-- **Domains page injection**: adds a “Temporary URL” button alongside existing actions.
-- **Licensed servers**: expiry options (1h, 6h, 12h, 24h, 7d, 30d).
-- **Guest mode**: default expiry of 10 minutes (uses guest API endpoint).
+It also injects a “Temporary URL” action in the Domains UI (reversible, without modifying core DirectAdmin files).
 
 ## Requirements
 
-- DirectAdmin (Evolution skin)
-- Access to `/usr/local/directadmin/plugins`
+- DirectAdmin with the **Evolution** skin
+- Root shell access
 - Hosts.click API base URL: `https://hostsclick.com` (HTTPS only)
+
+## Features
+
+- “Preview Links” UI:
+  - Create preview links from domain + IP
+  - List preview links
+- “Settings” UI:
+  - Save API key
+  - Test API key / validate license
+  - Clear API key
+- Domains page injection:
+  - Adds “Temporary URL” beside existing domain actions
+- Guest mode (no key) and Licensed mode (key) flows.
 
 ## Install
 
+1. Clone this repo or upload it to your server.
+2. Run the installer as root:
+
 ```bash
-sudo /path/to/directadmin-plugin/install.sh
+cd /path/to/hosts.click.directadmin
+sudo bash install.sh
 ```
 
-This will:
-- Copy plugin files into `/usr/local/directadmin/plugins/hosts-click`
-- Create `/usr/local/directadmin/plugins/hosts-click/config.json`
-- Inject a safe script tag into `/usr/local/directadmin/data/skins/evolution/custom/footer.html`
+The installer will:
+
+- Copy plugin files into:
+  - `/usr/local/directadmin/plugins/hosts-click`
+- Create (or preserve) the config file:
+  - `/usr/local/directadmin/plugins/hosts-click/config.json`
+- Inject a safe script tag into:
+  - `/usr/local/directadmin/data/skins/evolution/custom/footer.html`
+
+That script powers the Domains page “Temporary URL” injection.
 
 ## Uninstall
 
 ```bash
-sudo /path/to/directadmin-plugin/uninstall.sh
+cd /path/to/hosts.click.directadmin
+sudo bash uninstall.sh
 ```
 
 ## Configuration
 
-Set your API key in the **Settings** tab, or edit:
+Use the plugin **Settings** tab to set your API key, or edit:
 
-```
+```text
 /usr/local/directadmin/plugins/hosts-click/config.json
 ```
 
 Example:
-```
+
+```json
 {
   "api_base_url": "https://hostsclick.com",
   "api_key": "YOUR_KEY",
@@ -51,20 +71,64 @@ Example:
 }
 ```
 
-## Guest vs Licensed
+## Guest vs Licensed Mode
 
-- **Guest mode** (no valid API key): uses `POST /api/guest-preview-links` with **10‑minute** expiry.
-- **Licensed mode** (valid API key): uses `POST /api/preview-links` and allows expiry options.
+- Guest mode (no valid key): uses `POST /api/guest-preview-links` with a fixed **10-minute** expiry.
+- Licensed mode (valid key): uses `POST /api/preview-links` (header `X-API-Key`) and supports expiry options.
 
-### Required API endpoints
+### Required API Endpoints
 
-- **Licensed**
-  - `POST /api/preview-links` (header `X-API-Key`)
-- **Guest**
+- Licensed:
+  - `POST /api/preview-links` (`X-API-Key`)
+- Guest:
   - `POST /api/guest-preview-links`
 
-## Notes
+If `guest-preview-links` is not available on your API base URL, guest mode will fail.
 
-- Domains are read from `/usr/local/directadmin/data/users/<user>/domains.list`.
-- IPs are read from `/usr/local/directadmin/data/users/<user>/domains/<domain>.conf` (fallback: admin IP list).
-- The Domains page injection is reversible and doesn’t touch core skin files.
+## How Domain/IP Detection Works
+
+- Domains are read from:
+  - `/usr/local/directadmin/data/users/<user>/domains.list`
+- IPs are read from:
+  - `/usr/local/directadmin/data/users/<user>/domains/<domain>.conf`
+- Fallback:
+  - admin IP list (when domain conf is missing)
+
+## Updating
+
+To update, pull new changes and re-run the installer:
+
+```bash
+cd /path/to/hosts.click.directadmin
+git pull
+sudo bash install.sh
+```
+
+## Troubleshooting
+
+- Plugin menu missing:
+  - Confirm the plugin directory exists:
+
+```bash
+ls -la /usr/local/directadmin/plugins/hosts-click
+```
+
+- Domain injection not showing:
+  - Confirm the injection script is present:
+    - `/usr/local/directadmin/plugins/hosts-click/assets/domains-inject.js`
+  - Confirm it is referenced in:
+    - `/usr/local/directadmin/data/skins/evolution/custom/footer.html`
+
+## Security Notes
+
+- Your API key is stored in a JSON config file on the server.
+- The installer attempts to set ownership/perms to DirectAdmin’s `diradmin` user when available.
+
+## License / Support
+
+Issues and PRs are welcome. Include:
+
+- DirectAdmin version
+- Skin (Evolution)
+- Any relevant logs/errors
+- The exact install/uninstall commands you ran
